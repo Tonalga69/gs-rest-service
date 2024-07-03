@@ -1,16 +1,22 @@
 package com.example.restservice;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping(path = "/employees")
 public class EmployeeController {
+Employees employees= new Employees(new EmployeeManager());
 
-
-    @GetMapping("/")
+    @GetMapping(path = "/", produces = "application/json")
     public Employees getEmployees() {
-        return new Employees(new EmployeeManager());
+        return employees;
     }
+
+    @PostMapping(path = "/", consumes = "application/json")
+    public void addEmployee(@RequestBody Employee employee, HttpServletResponse response) {
+        employees.addEmployee(employee);
+        response.setStatus(HttpServletResponse.SC_CREATED);
+    }
+
 }
